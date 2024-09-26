@@ -1,0 +1,135 @@
+import math
+
+
+class Location:
+    # TODO: Implement the Location class according to the given UML class diagram and descriptions
+    #The 2 data attributes of Location: x--coordinate and y--coordinate
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+    #The string representaion of (x,y)
+    def __str__(self):
+        return f"({self.x},{self.y})"
+
+
+class Car:
+    # TODO: Implement the Car class according to the given UML class diagram and descriptions
+    #The 3 data attributes assigned: car_name, location and cost_per_mile.
+    def __init__(self, car_name, location, cost_per_mile):
+        self.car_name = car_name
+        self.location = location
+        self.cost_per_mile = cost_per_mile
+
+    #The string representation of [car_name, location, cost_per_mile]’
+    def __str__(self):
+        return f"[{self.car_name}, {self.location}, {self.cost_per_mile}]"
+
+    #Updates the x and y coordinates to new_x and new_y
+    def move_to(self, new_x, new_y):
+        self.location.x = new_x
+        self.location.y = new_y
+
+
+class Passenger:
+    # TODO: Implement the Passenger class according to the given UML class diagram and descriptions
+    #The 2 data attributes assigned: passenger_name and location
+    def __init__(self, passenger_name, location):
+        self.passenger_name = passenger_name
+        self.location = location
+    ##The string representation for [passenger_name, location]
+    def __str__(self):
+        return f"[{self.passenger_name}, {self.location}]"
+
+    # Updates the x and y coordinates to new_x and new_y
+    def move_to(self, new_x, new_y):
+        self.location.x = new_x
+        self.location.y = new_y
+
+
+class RideSharingApp:
+    # TODO: Implement the RideSharingApp class according to the given UML class diagram and descriptions
+    # The 2 data attributes assigned: cars(a list of 'Car' objects), and passengers (a list of 'Passenger' objects)
+    def __init__(self):
+        self.cars = []
+        self.passengers = []
+    #Adds the 'Car' object to cars
+    def add_car(self, car):
+        self.cars.append(car)
+
+    # Adds the 'Passenger' object to passengers
+    def add_passenger(self, passenger):
+        self.passengers.append(passenger)
+
+    # Removes the 'Car' object from cars
+    def remove_car(self, car):
+        self.cars.remove(car)
+
+    # Removes the 'Passenger' object from passengers
+    def remove_passenger(self, passenger):
+        self.passengers.remove(passenger)
+
+    #Finds the cheapest car
+    def find_cheapest_car(self):
+        #Cheapest car found through min() determined by cost_per_mile
+        cheapest_car = min(self.cars, key=lambda car: car.cost_per_mile)
+        #Prints the cheapest car
+        print(f"Cheapest car available: {cheapest_car.car_name}, Cost per mile: {cheapest_car.cost_per_mile}")
+
+    # Finds the nearest car
+    def find_nearest_car(self, passenger):
+        #Seperately finds the distance in a function
+        def distance(car):
+            #Sets the distance variables
+            x1, y1 = passenger.location.x, passenger.location.y
+            x2, y2 = car.location.x, car.location.y
+            #Distance equation
+            return math.sqrt(((x2-x1)**2)+((y2-y1)**2))
+        #Finds the nearest car
+        nearest_car = min(self.cars, key=distance)
+        #Prints the nearest car
+        print(f"Nearest car for {passenger.passenger_name}: {nearest_car.car_name}, Distance: {distance(nearest_car):.2f}")
+# For the remaining code (after this line), no modification is required
+print('---------------------Object Creation------------------')
+location1 = Location(2, 1)
+location2 = Location(-4, 1)
+car1 = Car('car1', location1, 0.61)
+car2 = Car('car2', location2, 0.50)
+print('Car object 1 created:', car1)
+print('Car object 2 created:', car2)
+
+location3 = Location(-2, 3)
+location4 = Location(0, 0)
+passenger1 = Passenger('passenger1', location3)
+passenger2 = Passenger('passenger2', location4)
+print('Passenger object 1 created:', passenger1)
+print('Passenger object 2 created:', passenger2)
+
+mobileApp = RideSharingApp()
+mobileApp.add_car(car1)
+mobileApp.add_car(car2)
+mobileApp.add_passenger(passenger1)
+mobileApp.add_passenger(passenger2)
+
+print('-----------------------Scenario 1---------------------')
+mobileApp.find_cheapest_car()
+mobileApp.find_nearest_car(passenger1)
+mobileApp.find_nearest_car(passenger2)
+
+print('-----------------------Scenario 2---------------------')
+car1.move_to(0, -5)
+passenger1.move_to(0, 3)
+print('car1\'s location has been updated:', car1)
+print('passenger1\'s location has been updated:', passenger1)
+
+mobileApp.find_cheapest_car()
+mobileApp.find_nearest_car(passenger1)
+mobileApp.find_nearest_car(passenger2)
+
+print('-----------------------Scenario 3---------------------')
+car3 = Car('car3', Location(0, 2), 0.3)
+mobileApp.add_car(car3)
+print('New car added:', car3)
+
+mobileApp.find_cheapest_car()
+mobileApp.find_nearest_car(passenger1)
+mobileApp.find_nearest_car(passenger2)
